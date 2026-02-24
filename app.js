@@ -635,14 +635,13 @@ function getDayLabels() {
 
 // ─── Summary Stats ────────────────────────────────────────────────────────────
 function renderSummary() {
-  const bases  = RESORTS.map(r => r.stats.baseDepth);
-  const avg    = Math.round(bases.reduce((a, b) => a + b) / bases.length);
+  const avgTop = Math.round(RESORTS.map(r => Math.round(r.stats.baseDepth * 1.5)).reduce((a, b) => a + b) / RESORTS.length);
   const best48 = Math.max(...RESORTS.map(r => r.stats.summit48h));
   const open   = RESORTS.filter(r => r.stats.lifts.open > 0).length;
   const powder = RESORTS.filter(isPowderDay).length;
   const live   = RESORTS.filter(r => r.liveData).length;
 
-  document.getElementById('avgBase').textContent      = avg + ' cm';
+  document.getElementById('avgBase').textContent      = avgTop + ' cm';
   document.getElementById('best48h').textContent      = best48 + ' cm';
   document.getElementById('resortsOpen').textContent  = open + '/10';
   document.getElementById('powderAlert').textContent  = powder > 0 ? `${powder} Resort${powder > 1 ? 's' : ''}!` : 'None';
@@ -1099,7 +1098,6 @@ async function init() {
   });
 
   // Full-screen map modal
-  document.getElementById('mapModeBtn').addEventListener('click', openBigMap);
   document.getElementById('bigMapClose').addEventListener('click', closeBigMap);
   document.getElementById('bigMapOverlay').addEventListener('click', e => {
     if (e.target === document.getElementById('bigMapOverlay')) closeBigMap();
