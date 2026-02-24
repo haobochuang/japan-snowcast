@@ -430,13 +430,17 @@ async function fetchResortWeather(resort, onProgress) {
     wind_speed_unit: 'kmh',
   });
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
   try {
-    const res = await fetch(`${OPEN_METEO}?${params}`);
+    const res = await fetch(`${OPEN_METEO}?${params}`, { signal: controller.signal });
+    clearTimeout(timer);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const ok = processWeatherData(resort, data);
     resort.liveData = ok;
   } catch (err) {
+    clearTimeout(timer);
     console.warn(`[${resort.name}] Fetch failed — using fallback data.`, err);
     resort.liveData = false;
   }
@@ -445,48 +449,20 @@ async function fetchResortWeather(resort, onProgress) {
 
 async function fetchAllWeather() {
   let loaded = 0;
-  showLoading(0);
+  const badge = document.getElementById('dataBadge');
+  if (badge) badge.textContent = '⏳ Updating…';
 
-  await Promise.all(
+  const fetchAll = Promise.all(
     RESORTS.map(resort =>
       fetchResortWeather(resort, () => {
         loaded++;
-        updateLoadingProgress(loaded);
+        if (badge) badge.textContent = `⏳ ${loaded}/10 resorts…`;
       })
     )
   );
 
-  hideLoading();
-}
-
-// ─── Loading Overlay ──────────────────────────────────────────────────────────
-function showLoading(initial) {
-  const overlay = document.createElement('div');
-  overlay.id = 'loadingOverlay';
-  overlay.innerHTML = `
-    <div class="loading-box">
-      <div class="loading-flake">❄️</div>
-      <div class="loading-title">Fetching Live Weather</div>
-      <div class="loading-sub">Connecting to Open-Meteo API…</div>
-      <div class="loading-bar-track"><div class="loading-bar-fill" id="loadingBar" style="width:0%"></div></div>
-      <div class="loading-count" id="loadingCount">0 / 10 resorts</div>
-    </div>`;
-  document.body.appendChild(overlay);
-}
-
-function updateLoadingProgress(n) {
-  const bar   = document.getElementById('loadingBar');
-  const count = document.getElementById('loadingCount');
-  if (bar)   bar.style.width   = `${(n / 10) * 100}%`;
-  if (count) count.textContent = `${n} / 10 resorts`;
-}
-
-function hideLoading() {
-  const el = document.getElementById('loadingOverlay');
-  if (el) {
-    el.classList.add('fade-out');
-    setTimeout(() => el.remove(), 400);
-  }
+  await Promise.race([fetchAll, new Promise(resolve => setTimeout(resolve, 10000))]);
+  RESORTS.forEach(r => { if (r.liveData === undefined) r.liveData = false; });
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -732,6 +708,12 @@ function conditionColor(base48h) {
 }
 
 function initMap() {
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet not loaded — map section hidden.');
+    document.querySelector('.map-section').style.display = 'none';
+    return;
+  }
+
   map = L.map('map', {
     center: [39.8, 139.5],
     zoom: 6,
@@ -739,9 +721,8 @@ function initMap() {
     attributionControl: true,
   });
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19,
   }).addTo(map);
 
@@ -855,15 +836,18 @@ function scheduleRefresh() {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
   createSnowflakes();
-  initMap();
-
-  // Fetch live data first, then render
-  await fetchAllWeather();
-  renderSummary();
-  renderMapMarkers();
+  try { initMap(); } catch (e) {
+    console.warn('Map init failed:', e);
+    document.querySelector('.map-section').style.display = 'none';
+  }
 
   const grid = document.getElementById('resortGrid');
+
+  // Render immediately with fallback data so the UI is never blocked
+  RESORTS.forEach(r => { r.liveData = false; });
+  renderSummary();
   RESORTS.forEach(resort => grid.appendChild(buildCard(resort)));
+  renderMapMarkers();
 
   // Filters
   document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -876,6 +860,13 @@ async function init() {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // Fetch live data in background, then silently refresh
+  await fetchAllWeather();
+  renderSummary();
+  grid.innerHTML = '';
+  RESORTS.forEach(resort => grid.appendChild(buildCard(resort)));
+  renderMapMarkers();
 
   scheduleRefresh();
 }
