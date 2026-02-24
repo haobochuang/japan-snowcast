@@ -465,6 +465,152 @@ async function fetchAllWeather() {
   RESORTS.forEach(r => { if (r.liveData === undefined) r.liveData = false; });
 }
 
+// ─── 3-Month History ──────────────────────────────────────────────────────────
+function getHistoryDateRange() {
+  const jst = nowJST();
+  const end = new Date(jst);
+  end.setDate(end.getDate() - 1);           // yesterday JST (archive requires past dates)
+  const start = new Date(end);
+  start.setDate(start.getDate() - 90);      // 91-day window = ~13 weeks
+  return {
+    startDate: start.toISOString().slice(0, 10),
+    endDate:   end.toISOString().slice(0, 10),
+  };
+}
+
+function processHistoryData(daily) {
+  if (!daily || !daily.time || !daily.time.length) return null;
+  const weeks = [];
+  const n = daily.time.length;
+
+  for (let i = 0; i < n; i += 7) {
+    const slice   = daily.time.slice(i, i + 7);
+    if (!slice.length) break;
+    const hiVals  = daily.temperature_2m_max.slice(i, i + 7);
+    const loVals  = daily.temperature_2m_min.slice(i, i + 7);
+    const snVals  = daily.snowfall_sum.slice(i, i + 7);
+    const wdVals  = daily.windspeed_10m_max.slice(i, i + 7);
+
+    const snowTotal = Math.round(snVals.reduce((s, v) => s + (v || 0), 0));
+    const tempHi    = Math.round(Math.max(...hiVals.map(v => v ?? -99)));
+    const tempLo    = Math.round(Math.min(...loVals.map(v => v ??  99)));
+    const windAvg   = Math.round(wdVals.reduce((s, v) => s + (v || 0), 0) / wdVals.length);
+
+    const d = new Date(slice[0] + 'T12:00:00+09:00');
+    const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    weeks.push({ label, snowTotal, tempHi, tempLo, windAvg });
+  }
+  return weeks.length ? { weeks } : null;
+}
+
+async function fetchResortHistory(resort) {
+  if (resort.historyCache !== undefined) return resort.historyCache;
+
+  const { startDate, endDate } = getHistoryDateRange();
+  const params = new URLSearchParams({
+    latitude:        resort.lat,
+    longitude:       resort.lon,
+    start_date:      startDate,
+    end_date:        endDate,
+    daily:           'snowfall_sum,temperature_2m_max,temperature_2m_min,windspeed_10m_max',
+    timezone:        'Asia/Tokyo',
+    wind_speed_unit: 'kmh',
+  });
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 12000);
+  try {
+    const res = await fetch(
+      `https://archive-api.open-meteo.com/v1/archive?${params}`,
+      { signal: controller.signal }
+    );
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    resort.historyCache = processHistoryData(data.daily);
+  } catch (err) {
+    clearTimeout(timer);
+    console.warn(`[${resort.name}] History fetch failed:`, err);
+    resort.historyCache = null;
+  }
+  return resort.historyCache;
+}
+
+function buildHistoryHTML(history) {
+  if (!history || !history.weeks || !history.weeks.length) {
+    return `<div class="hist-error">Historical data unavailable</div>`;
+  }
+  const { weeks } = history;
+
+  // — Snowfall bars —
+  const maxSnow  = Math.max(...weeks.map(w => w.snowTotal), 1);
+  const snowBars = weeks.map(w => {
+    const h = Math.max(4, Math.round((w.snowTotal / maxSnow) * 52));
+    return `
+      <div class="snow-bar-wrap">
+        <div class="snow-bar-val">${w.snowTotal > 0 ? w.snowTotal : ''}</div>
+        <div class="snow-bar" style="height:${h}px"></div>
+        <div class="snow-bar-label">${w.label}</div>
+      </div>`;
+  }).join('');
+
+  // — Temperature range bars —
+  const globalHi  = Math.max(...weeks.map(w => w.tempHi));
+  const globalLo  = Math.min(...weeks.map(w => w.tempLo));
+  const totalSpan = Math.max(globalHi - globalLo, 1);
+  const TEMP_H    = 60;
+  const tempBars  = weeks.map(w => {
+    const rangeH    = Math.max(4, Math.round(((w.tempHi - w.tempLo) / totalSpan) * TEMP_H));
+    const topOffset = Math.round(((globalHi - w.tempHi) / totalSpan) * TEMP_H);
+    const hiColor   = w.tempHi >= 0 ? 'var(--amber)' : 'var(--accent2)';
+    const loColor   = w.tempLo <= -10 ? 'var(--powder)' : 'var(--accent)';
+    return `
+      <div class="hist-temp-bar-wrap">
+        <div class="hist-temp-hi" style="color:${hiColor}">${w.tempHi}°</div>
+        <div class="hist-temp-col" style="height:${TEMP_H}px">
+          <div class="hist-temp-bar" style="height:${rangeH}px;margin-top:${topOffset}px"></div>
+        </div>
+        <div class="hist-temp-lo" style="color:${loColor}">${w.tempLo}°</div>
+        <div class="snow-bar-label">${w.label}</div>
+      </div>`;
+  }).join('');
+
+  // — Wind bars —
+  const maxWind  = Math.max(...weeks.map(w => w.windAvg), 1);
+  const windBars = weeks.map(w => {
+    const h = Math.max(4, Math.round((w.windAvg / maxWind) * 52));
+    return `
+      <div class="snow-bar-wrap">
+        <div class="snow-bar-val">${w.windAvg}</div>
+        <div class="hist-wind-bar" style="height:${h}px"></div>
+        <div class="snow-bar-label">${w.label}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="modal-section">
+      <div class="modal-section-title">Snowfall — Weekly Total (cm)</div>
+      <div class="snow-chart hist-chart">${snowBars}</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Temperature — Weekly Hi / Lo (°C)</div>
+      <div class="hist-temp-chart">${tempBars}</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Wind Speed — Weekly Avg (km/h)</div>
+      <div class="snow-chart hist-chart">${windBars}</div>
+    </div>`;
+}
+
+async function renderHistoryIntoModal(resort) {
+  const placeholder = document.getElementById('hist-placeholder');
+  if (!placeholder) return;
+  placeholder.innerHTML = `<div class="hist-loading"><span style="animation:spin 2s linear infinite;display:inline-block">⏳</span> Loading 3-month history…</div>`;
+  const history = await fetchResortHistory(resort);
+  const el = document.getElementById('hist-placeholder');
+  if (el) el.innerHTML = buildHistoryHTML(history);
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function isPowderDay(resort) {
   return resort.stats.base48h >= 30 || resort.stats.summit48h >= 38;
@@ -660,6 +806,7 @@ function openModal(resort) {
         <div class="modal-section-title">About</div>
         <p style="font-size:0.85rem;color:var(--text-dim);line-height:1.6">${resort.notes}</p>
       </div>
+      <div id="hist-placeholder"></div>
     </div>`;
 
   document.getElementById('modalOverlay').classList.add('open');
@@ -676,6 +823,9 @@ function openModal(resort) {
     };
     img.src = resort.photo;
   }
+
+  // Load 3-month history asynchronously (non-blocking)
+  renderHistoryIntoModal(resort);
 }
 
 function closeModal() {
@@ -803,6 +953,94 @@ function renderMapMarkers() {
   });
 }
 
+// ─── Full-Screen Map Modal ────────────────────────────────────────────────────
+let bigMap = null;
+
+// Global hook so Leaflet popup buttons can open the resort modal
+window.openResortFromMap = function(id) {
+  closeBigMap();
+  const resort = RESORTS.find(r => r.id === id);
+  if (resort) openModal(resort);
+};
+
+function renderBigMapMarkers() {
+  if (!bigMap) return;
+  RESORTS.forEach(resort => {
+    const { stats, lat, lon } = resort;
+    const color    = conditionColor(stats.base48h);
+    const isPowder = stats.base48h >= 40;
+
+    // Snow-depth halo
+    const haloR = Math.min(55, Math.max(20, 20 + Math.sqrt(stats.baseDepth) * 1.5));
+    L.circleMarker([lat, lon], {
+      radius: haloR, fillColor: color, fillOpacity: 0.2,
+      color: color, weight: 1.5, opacity: 0.5,
+    }).addTo(bigMap);
+
+    // Popup
+    const popupHTML = `
+      <div>
+        <div class="bmp-popup-head" style="background:${resort.bgGradient}">
+          <div class="bmp-popup-rank">${resort.rank} in Japan</div>
+          <div class="bmp-popup-name">${resort.name}</div>
+          <div class="bmp-popup-sub">${resort.nameJP} · ${resort.prefecture}</div>
+        </div>
+        <div class="bmp-popup-body">
+          <div class="bmp-popup-row"><span>❄ Base Depth</span><strong style="color:var(--accent)">${stats.baseDepth} cm</strong></div>
+          <div class="bmp-popup-row"><span>🌨 48h Snow</span><strong style="color:${color}">${stats.base48h} cm</strong></div>
+          <div class="bmp-popup-row"><span>🌡 Temp</span><strong>${stats.tempC}°C</strong></div>
+          <div class="bmp-popup-row"><span>💨 Wind</span><strong>${stats.windKph} km/h</strong></div>
+          <div class="bmp-popup-row"><span>🏔 Surface</span><strong>${stats.condition}</strong></div>
+        </div>
+        <button class="bmp-popup-btn" onclick="openResortFromMap(${resort.id})">View Full Details →</button>
+      </div>`;
+
+    // Pin marker (reuses existing map-pin styles)
+    const sName     = resort.name.split(' ')[0];
+    const pinIcon   = resort.region === 'hokkaido' ? '❄' : '⛷';
+    const powderCls = isPowder ? ' powder' : '';
+    const divIcon = L.divIcon({
+      html: `<div class="map-pin${powderCls}" style="--mc:${color}">
+               <div class="map-pin-bubble">
+                 <span class="map-pin-icon">${pinIcon}</span>
+                 <span class="map-pin-name">${sName}</span>
+                 <span class="map-pin-temp">${stats.tempC}°</span>
+               </div>
+               <div class="map-pin-tip"></div>
+             </div>`,
+      className: '', iconAnchor: [0, 0],
+    });
+
+    L.marker([lat, lon], { icon: divIcon })
+      .bindPopup(popupHTML, { maxWidth: 230, className: 'bmp-popup-wrap' })
+      .addTo(bigMap);
+  });
+}
+
+function initBigMap() {
+  if (typeof L === 'undefined') return;
+  if (bigMap) { bigMap.invalidateSize(); return; }
+
+  bigMap = L.map('bigMap', { center: [39.8, 139.5], zoom: 6 });
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19,
+  }).addTo(bigMap);
+
+  renderBigMapMarkers();
+}
+
+function openBigMap() {
+  document.getElementById('bigMapOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => initBigMap(), 60); // delay ensures modal has dimensions
+}
+
+function closeBigMap() {
+  document.getElementById('bigMapOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 // ─── Snow Background ──────────────────────────────────────────────────────────
 function createSnowflakes() {
   const container = document.getElementById('snowBg');
@@ -854,12 +1092,20 @@ async function init() {
     btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
   });
 
-  // Modal
+  // Resort detail modal
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalOverlay').addEventListener('click', e => {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // Full-screen map modal
+  document.getElementById('mapModeBtn').addEventListener('click', openBigMap);
+  document.getElementById('bigMapClose').addEventListener('click', closeBigMap);
+  document.getElementById('bigMapOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('bigMapOverlay')) closeBigMap();
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeBigMap(); } });
 
   // Fetch live data in background, then silently refresh
   await fetchAllWeather();

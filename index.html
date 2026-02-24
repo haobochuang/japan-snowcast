@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Japan Snowcast — Top 10 Ski Resorts</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="leaflet.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet" />
 </head>
@@ -27,6 +27,7 @@
         <div class="last-updated" id="lastUpdated">Fetching live data…</div>
         <div class="header-badges">
           <span class="data-badge" id="dataBadge">⏳ Loading…</span>
+          <button class="map-mode-btn" id="mapModeBtn">🗺 Full Map</button>
           <div class="season-badge">2025–26 Season</div>
         </div>
       </div>
@@ -100,6 +101,23 @@
     </div>
   </main>
 
+  <!-- Full-screen map modal -->
+  <div class="bigmap-overlay" id="bigMapOverlay">
+    <div class="bigmap-modal">
+      <div class="bigmap-header">
+        <h2 class="bigmap-title">🗺 Japan Ski Resorts — Live Map</h2>
+        <div class="bigmap-legend">
+          <div class="map-legend-item"><div class="map-legend-swatch" style="background:#a78bfa"></div><span>Powder</span></div>
+          <div class="map-legend-item"><div class="map-legend-swatch" style="background:#4fc3f7"></div><span>Packed Powder</span></div>
+          <div class="map-legend-item"><div class="map-legend-swatch" style="background:#4ade80"></div><span>Groomed</span></div>
+          <div class="map-legend-item"><div class="map-legend-swatch" style="background:#94a3b8"></div><span>Minimal</span></div>
+        </div>
+        <button class="bigmap-close" id="bigMapClose">✕</button>
+      </div>
+      <div id="bigMap"></div>
+    </div>
+  </div>
+
   <!-- Detail modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal" id="modal">
@@ -116,7 +134,7 @@
     </div>
   </footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLcE=" crossorigin=""></script>
+  <script src="leaflet.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
