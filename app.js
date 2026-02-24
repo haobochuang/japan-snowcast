@@ -313,6 +313,256 @@ const RESORTS = [
     website: 'https://www.appi.co.jp',
     notes: 'Tohoku\'s premier resort. Wide, well-groomed runs great for families and intermediate skiers.',
   },
+  {
+    id: 11, rank: '#11',
+    name: 'Tomamu', nameJP: 'トマムスキー場',
+    region: 'hokkaido', prefecture: 'Hokkaido',
+    lat: 43.0200, lon: 142.7800,
+    elevation: { base: 600, summit: 1239 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#0a2a3a,#0d4a5c)',
+    stats: {
+      baseDepth: 175, summit48h: 50, base48h: 40,
+      openRuns: 28, totalRuns: 30,
+      lifts: { open: 8, total: 8 },
+      condition: 'Powder', windKph: 15, visibility: 'Excellent', tempC: -14
+    },
+    forecast: [
+      { day:'Mon', icon:'🌨', snow:22, high:-12, low:-18, desc:'Heavy powder' },
+      { day:'Tue', icon:'❄️', snow:14, high:-11, low:-17, desc:'Snow' },
+      { day:'Wed', icon:'☀️', snow:0,  high:-9,  low:-15, desc:'Clear & cold' },
+      { day:'Thu', icon:'🌨', snow:18, high:-12, low:-18, desc:'Snow showers' },
+      { day:'Fri', icon:'⛅', snow:5,  high:-10, low:-16, desc:'Partly cloudy' },
+    ],
+    weeklySnow: [22, 14, 0, 18, 5, 20, 12],
+    website: 'https://www.snowtomamu.jp',
+    notes: 'Hoshino Resorts flagship. Famous for the "sea of clouds" at sunrise. Tree skiing heaven in Hokkaido\'s interior.',
+  },
+  {
+    id: 12, rank: '#12',
+    name: 'Naeba', nameJP: '苗場スキー場',
+    region: 'honshu', prefecture: 'Niigata',
+    lat: 36.8200, lon: 138.7100,
+    elevation: { base: 780, summit: 1789 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#0d3320,#1a5c38)',
+    stats: {
+      baseDepth: 120, summit48h: 28, base48h: 22,
+      openRuns: 28, totalRuns: 30,
+      lifts: { open: 16, total: 17 },
+      condition: 'Packed Powder', windKph: 25, visibility: 'Good', tempC: -8
+    },
+    forecast: [
+      { day:'Mon', icon:'🌨', snow:10, high:-6, low:-11, desc:'Snow' },
+      { day:'Tue', icon:'🌨', snow:18, high:-7, low:-12, desc:'Heavy snow' },
+      { day:'Wed', icon:'⛅', snow:3,  high:-5, low:-10, desc:'Clearing' },
+      { day:'Thu', icon:'☀️', snow:0,  high:-3, low:-8,  desc:'Sunny' },
+      { day:'Fri', icon:'🌨', snow:8,  high:-6, low:-11, desc:'Snow' },
+    ],
+    weeklySnow: [10, 18, 3, 0, 8, 14, 6],
+    website: 'https://www.princehotels.com/naeba',
+    notes: 'One of Japan\'s largest single resorts. Connected to Kagura via the Dragondola. Hosts Fuji Rock Festival in summer.',
+  },
+  {
+    id: 13, rank: '#13',
+    name: 'Geto Kogen', nameJP: '夏油高原スキー場',
+    region: 'honshu', prefecture: 'Iwate',
+    lat: 39.5100, lon: 141.0800,
+    elevation: { base: 450, summit: 1042 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#05101e,#0a2040)',
+    stats: {
+      baseDepth: 250, summit48h: 75, base48h: 65,
+      openRuns: 14, totalRuns: 14,
+      lifts: { open: 7, total: 7 },
+      condition: 'Powder', windKph: 10, visibility: 'Good', tempC: -12
+    },
+    forecast: [
+      { day:'Mon', icon:'🌨', snow:32, high:-10, low:-16, desc:'Heavy powder' },
+      { day:'Tue', icon:'🌨', snow:28, high:-11, low:-17, desc:'Snow' },
+      { day:'Wed', icon:'❄️', snow:15, high:-9,  low:-15, desc:'Snow showers' },
+      { day:'Thu', icon:'⛅', snow:2,  high:-7,  low:-13, desc:'Partly cloudy' },
+      { day:'Fri', icon:'🌨', snow:20, high:-10, low:-16, desc:'Snow' },
+    ],
+    weeklySnow: [32, 28, 15, 2, 20, 10, 35],
+    website: 'https://www.geto.co.jp',
+    notes: 'Legendary for some of the driest, lightest powder in Japan. Small but world-class. Deep tree runs.',
+  },
+  {
+    id: 14, rank: '#14',
+    name: 'Madarao Kogen', nameJP: '斑尾高原スキー場',
+    region: 'honshu', prefecture: 'Nagano',
+    lat: 36.9800, lon: 138.3300,
+    elevation: { base: 1000, summit: 1382 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#143020,#1e4a30)',
+    stats: {
+      baseDepth: 155, summit48h: 40, base48h: 32,
+      openRuns: 22, totalRuns: 23,
+      lifts: { open: 10, total: 10 },
+      condition: 'Packed Powder', windKph: 12, visibility: 'Good', tempC: -9
+    },
+    forecast: [
+      { day:'Mon', icon:'❄️', snow:14, high:-7,  low:-13, desc:'Snow showers' },
+      { day:'Tue', icon:'🌨', snow:20, high:-8,  low:-14, desc:'Heavy snow' },
+      { day:'Wed', icon:'⛅', snow:5,  high:-6,  low:-12, desc:'Partly cloudy' },
+      { day:'Thu', icon:'☀️', snow:0,  high:-4,  low:-10, desc:'Sunny' },
+      { day:'Fri', icon:'🌨', snow:12, high:-7,  low:-13, desc:'Snow' },
+    ],
+    weeklySnow: [14, 20, 5, 0, 12, 8, 18],
+    website: 'https://www.madarao.jp',
+    notes: 'Famous for deep powder stashes and tree skiing. Called "The Hidden Secret" of Nagano. Japan Sea snowfall.',
+  },
+  {
+    id: 15, rank: '#15',
+    name: 'Cortina', nameJP: 'コルチナスキー場',
+    region: 'honshu', prefecture: 'Nagano',
+    lat: 36.6800, lon: 137.9200,
+    elevation: { base: 840, summit: 1920 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#0a1a3a,#101f4e)',
+    stats: {
+      baseDepth: 195, summit48h: 58, base48h: 48,
+      openRuns: 6, totalRuns: 6,
+      lifts: { open: 5, total: 5 },
+      condition: 'Powder', windKph: 8, visibility: 'Excellent', tempC: -11
+    },
+    forecast: [
+      { day:'Mon', icon:'🌨', snow:28, high:-9,  low:-15, desc:'Heavy powder' },
+      { day:'Tue', icon:'🌨', snow:35, high:-10, low:-16, desc:'Extreme snow' },
+      { day:'Wed', icon:'❄️', snow:18, high:-8,  low:-14, desc:'Snow' },
+      { day:'Thu', icon:'⛅', snow:4,  high:-6,  low:-12, desc:'Clearing' },
+      { day:'Fri', icon:'🌨', snow:22, high:-9,  low:-15, desc:'Snow' },
+    ],
+    weeklySnow: [28, 35, 18, 4, 22, 15, 30],
+    website: 'https://www.cortina.co.jp',
+    notes: 'Extreme deep powder. Gets the most snowfall of any resort in Nagano. Off-piste and tree skiing paradise in Otari.',
+  },
+  {
+    id: 16, rank: '#16',
+    name: 'Asahidake', nameJP: '大雪山旭岳',
+    region: 'hokkaido', prefecture: 'Hokkaido',
+    lat: 43.6600, lon: 142.8600,
+    elevation: { base: 1100, summit: 2291 },
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Asahidake_2014.jpg/800px-Asahidake_2014.jpg',
+    bgGradient: 'linear-gradient(135deg,#060c18,#0d1a30)',
+    stats: {
+      baseDepth: 280, summit48h: 80, base48h: 68,
+      openRuns: 1, totalRuns: 1,
+      lifts: { open: 1, total: 1 },
+      condition: 'Powder', windKph: 35, visibility: 'Poor', tempC: -20
+    },
+    forecast: [
+      { day:'Mon', icon:'🌨', snow:40, high:-18, low:-24, desc:'Alpine blizzard' },
+      { day:'Tue', icon:'🌨', snow:35, high:-17, low:-23, desc:'Heavy snow' },
+      { day:'Wed', icon:'❄️', snow:20, high:-15, low:-21, desc:'Snow' },
+      { day:'Thu', icon:'⛅', snow:5,  high:-13, low:-19, desc:'Partly cloudy' },
+      { day:'Fri', icon:'☀️', snow:0,  high:-12, low:-18, desc:'Clear & bitter' },
+    ],
+    weeklySnow: [40, 35, 20, 5, 0, 25, 45],
+    website: 'https://asahidake.hokkaido.jp',
+    notes: 'Highest resort in Hokkaido at 2291m. Opens in October, closes in June. Extreme alpine terrain. Japan\'s most snowfall.',
+  },
+  {
+    id: 17, rank: '#17',
+    name: 'Sahoro', nameJP: 'サホロスキー場',
+    region: 'hokkaido', prefecture: 'Hokkaido',
+    lat: 43.1100, lon: 143.1200,
+    elevation: { base: 390, summit: 1029 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#2a1a0a,#4a3010)',
+    stats: {
+      baseDepth: 155, summit48h: 38, base48h: 30,
+      openRuns: 20, totalRuns: 21,
+      lifts: { open: 9, total: 9 },
+      condition: 'Packed Powder', windKph: 18, visibility: 'Good', tempC: -11
+    },
+    forecast: [
+      { day:'Mon', icon:'❄️', snow:12, high:-9,  low:-15, desc:'Snow showers' },
+      { day:'Tue', icon:'🌨', snow:20, high:-10, low:-16, desc:'Snow' },
+      { day:'Wed', icon:'☀️', snow:0,  high:-8,  low:-14, desc:'Clear' },
+      { day:'Thu', icon:'⛅', snow:3,  high:-7,  low:-13, desc:'Partly cloudy' },
+      { day:'Fri', icon:'🌨', snow:15, high:-9,  low:-15, desc:'Snow' },
+    ],
+    weeklySnow: [12, 20, 0, 3, 15, 10, 8],
+    website: 'https://www.clubmed.co.jp/r/sahoro',
+    notes: 'Club Med resort in the Tokachi mountains. Wide groomed runs, family-friendly. Less crowded than western Hokkaido.',
+  },
+  {
+    id: 18, rank: '#18',
+    name: 'Tazawako', nameJP: 'たざわ湖スキー場',
+    region: 'honshu', prefecture: 'Akita',
+    lat: 39.7200, lon: 140.6900,
+    elevation: { base: 400, summit: 1167 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#0a1e3a,#0f2d55)',
+    stats: {
+      baseDepth: 105, summit48h: 22, base48h: 16,
+      openRuns: 13, totalRuns: 13,
+      lifts: { open: 8, total: 8 },
+      condition: 'Groomed', windKph: 14, visibility: 'Good', tempC: -7
+    },
+    forecast: [
+      { day:'Mon', icon:'⛅', snow:6,  high:-5, low:-10, desc:'Light snow' },
+      { day:'Tue', icon:'🌨', snow:14, high:-6, low:-11, desc:'Snow' },
+      { day:'Wed', icon:'❄️', snow:8,  high:-5, low:-10, desc:'Snow showers' },
+      { day:'Thu', icon:'☀️', snow:0,  high:-3, low:-8,  desc:'Clear' },
+      { day:'Fri', icon:'⛅', snow:4,  high:-4, low:-9,  desc:'Partly cloudy' },
+    ],
+    weeklySnow: [6, 14, 8, 0, 4, 10, 6],
+    website: 'https://www.tazawako-ski.com',
+    notes: 'Overlooking the deep-blue Lake Tazawa (Japan\'s deepest). Well-groomed runs with spectacular lake views. Good Tohoku powder.',
+  },
+  {
+    id: 19, rank: '#19',
+    name: 'Grandeco', nameJP: 'グランデコスノーリゾート',
+    region: 'honshu', prefecture: 'Fukushima',
+    lat: 37.7700, lon: 139.9700,
+    elevation: { base: 1100, summit: 1590 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#112210,#1c3a1a)',
+    stats: {
+      baseDepth: 135, summit48h: 28, base48h: 22,
+      openRuns: 26, totalRuns: 30,
+      lifts: { open: 10, total: 10 },
+      condition: 'Packed Powder', windKph: 10, visibility: 'Excellent', tempC: -8
+    },
+    forecast: [
+      { day:'Mon', icon:'🌨', snow:12, high:-6, low:-11, desc:'Snow' },
+      { day:'Tue', icon:'🌨', snow:16, high:-7, low:-12, desc:'Heavy snow' },
+      { day:'Wed', icon:'⛅', snow:4,  high:-5, low:-10, desc:'Partly cloudy' },
+      { day:'Thu', icon:'☀️', snow:0,  high:-3, low:-8,  desc:'Sunny' },
+      { day:'Fri', icon:'❄️', snow:8,  high:-5, low:-10, desc:'Snow showers' },
+    ],
+    weeklySnow: [12, 16, 4, 0, 8, 10, 14],
+    website: 'https://www.grandeco.com',
+    notes: 'Four gondolas access the upper mountain. Consistent powder snow in Ura-Bandai. One of Tohoku\'s best kept secrets.',
+  },
+  {
+    id: 20, rank: '#20',
+    name: 'Yuzawa Kogen', nameJP: '湯沢高原スキー場',
+    region: 'honshu', prefecture: 'Niigata',
+    lat: 36.9300, lon: 138.8200,
+    elevation: { base: 340, summit: 1124 },
+    photo: '',
+    bgGradient: 'linear-gradient(135deg,#1e1e2e,#2a2a4a)',
+    stats: {
+      baseDepth: 110, summit48h: 22, base48h: 18,
+      openRuns: 10, totalRuns: 10,
+      lifts: { open: 4, total: 4 },
+      condition: 'Groomed', windKph: 20, visibility: 'Moderate', tempC: -6
+    },
+    forecast: [
+      { day:'Mon', icon:'🌨', snow:8,  high:-4, low:-9,  desc:'Snow' },
+      { day:'Tue', icon:'🌨', snow:14, high:-5, low:-10, desc:'Heavy snow' },
+      { day:'Wed', icon:'⛅', snow:2,  high:-3, low:-8,  desc:'Clearing' },
+      { day:'Thu', icon:'☀️', snow:0,  high:-1, low:-6,  desc:'Sunny' },
+      { day:'Fri', icon:'🌨', snow:6,  high:-4, low:-9,  desc:'Snow' },
+    ],
+    weeklySnow: [8, 14, 2, 0, 6, 10, 5],
+    website: 'https://yuzawakogen.com',
+    notes: 'Easy Shinkansen access from Tokyo (75 min). Popular with Tokyo weekenders. Reliable Niigata Japan Sea snowfall.',
+  },
 ];
 
 // ─── Date / Time Helpers ──────────────────────────────────────────────────────
@@ -456,7 +706,7 @@ async function fetchAllWeather() {
     RESORTS.map(resort =>
       fetchResortWeather(resort, () => {
         loaded++;
-        if (badge) badge.textContent = `⏳ ${loaded}/10 resorts…`;
+        if (badge) badge.textContent = `⏳ ${loaded}/20 resorts…`;
       })
     )
   );
@@ -643,17 +893,17 @@ function renderSummary() {
 
   document.getElementById('avgBase').textContent      = avgTop + ' cm';
   document.getElementById('best48h').textContent      = best48 + ' cm';
-  document.getElementById('resortsOpen').textContent  = open + '/10';
+  document.getElementById('resortsOpen').textContent  = open + '/20';
   document.getElementById('powderAlert').textContent  = powder > 0 ? `${powder} Resort${powder > 1 ? 's' : ''}!` : 'None';
   if (powder > 0) document.getElementById('powderAlert').style.color = 'var(--powder)';
 
   document.getElementById('lastUpdated').textContent =
-    `Live data (${live}/10 resorts) · ${formatDate()}`;
+    `Live data (${live}/20 resorts) · ${formatDate()}`;
 
   // Show live/demo ratio badge
   const badge = document.getElementById('dataBadge');
   if (badge) {
-    badge.textContent = live === 10 ? '🟢 All Live' : live > 0 ? `🟡 ${live}/10 Live` : '⚪ Demo Data';
+    badge.textContent = live === 20 ? '🟢 All Live' : live > 0 ? `🟡 ${live}/20 Live` : '⚪ Demo Data';
   }
 }
 
