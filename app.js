@@ -344,7 +344,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Niigata',
     lat: 36.8200, lon: 138.7100,
     elevation: { base: 780, summit: 1789 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Naebayama.JPG/800px-Naebayama.JPG',
     bgGradient: 'linear-gradient(135deg,#0d3320,#1a5c38)',
     stats: {
       baseDepth: 120, summit48h: 28, base48h: 22,
@@ -394,7 +394,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Nagano',
     lat: 36.9800, lon: 138.3300,
     elevation: { base: 1000, summit: 1382 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Madarao_Mountain_Resort_(51846003746).jpg/800px-Madarao_Mountain_Resort_(51846003746).jpg',
     bgGradient: 'linear-gradient(135deg,#143020,#1e4a30)',
     stats: {
       baseDepth: 155, summit48h: 40, base48h: 32,
@@ -419,7 +419,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Nagano',
     lat: 36.6800, lon: 137.9200,
     elevation: { base: 840, summit: 1920 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Hakuba_Cortina_Kokusai_Ski_Resort.JPG/800px-Hakuba_Cortina_Kokusai_Ski_Resort.JPG',
     bgGradient: 'linear-gradient(135deg,#0a1a3a,#101f4e)',
     stats: {
       baseDepth: 195, summit48h: 58, base48h: 48,
@@ -494,7 +494,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Akita',
     lat: 39.7200, lon: 140.6900,
     elevation: { base: 400, summit: 1167 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Tazawako_ski_area.JPG/800px-Tazawako_ski_area.JPG',
     bgGradient: 'linear-gradient(135deg,#0a1e3a,#0f2d55)',
     stats: {
       baseDepth: 105, summit48h: 22, base48h: 16,
@@ -544,7 +544,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Niigata',
     lat: 36.9300, lon: 138.8200,
     elevation: { base: 340, summit: 1124 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Yuzawa_Kogen_Ski_Area.JPG/800px-Yuzawa_Kogen_Ski_Area.JPG',
     bgGradient: 'linear-gradient(135deg,#1e1e2e,#2a2a4a)',
     stats: {
       baseDepth: 110, summit48h: 22, base48h: 18,
@@ -569,7 +569,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Niigata',
     lat: 36.8500, lon: 138.7300,
     elevation: { base: 620, summit: 1845 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Kagura_Ski_Resort_(41156596741).jpg/800px-Kagura_Ski_Resort_(41156596741).jpg',
     bgGradient: 'linear-gradient(135deg,#1a0a2e,#2d1050)',
     stats: {
       baseDepth: 145, summit48h: 32, base48h: 26,
@@ -669,7 +669,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Nagano',
     lat: 36.7200, lon: 137.8300,
     elevation: { base: 840, summit: 1680 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Tsugaike-Kogen_Ski_Resort_05.jpg/800px-Tsugaike-Kogen_Ski_Resort_05.jpg',
     bgGradient: 'linear-gradient(135deg,#0d2a1a,#143d26)',
     stats: {
       baseDepth: 130, summit48h: 28, base48h: 22,
@@ -694,7 +694,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Nagano',
     lat: 36.6950, lon: 137.8650,
     elevation: { base: 760, summit: 1831 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Hakuba_Happo-one_Winter_Resort.JPG/800px-Hakuba_Happo-one_Winter_Resort.JPG',
     bgGradient: 'linear-gradient(135deg,#1a2a3a,#253a50)',
     stats: {
       baseDepth: 150, summit48h: 38, base48h: 30,
@@ -744,7 +744,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Niigata',
     lat: 36.9000, lon: 138.0900,
     elevation: { base: 680, summit: 1400 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Akakura_onsen_ski_resort_(49819553721).jpg/800px-Akakura_onsen_ski_resort_(49819553721).jpg',
     bgGradient: 'linear-gradient(135deg,#2a0a0a,#4a1010)',
     stats: {
       baseDepth: 160, summit48h: 42, base48h: 34,
@@ -844,7 +844,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Nagano',
     lat: 36.3500, lon: 138.6300,
     elevation: { base: 1000, summit: 1200 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Prince_Snow_Resort_Karuizawa.JPG/800px-Prince_Snow_Resort_Karuizawa.JPG',
     bgGradient: 'linear-gradient(135deg,#1e0a3a,#2a1050)',
     stats: {
       baseDepth: 40, summit48h: 6, base48h: 4,
@@ -869,7 +869,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Nagano',
     lat: 36.5200, lon: 138.3200,
     elevation: { base: 1250, summit: 2010 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Sugadaira_Kogen_Sports_Land.jpg/800px-Sugadaira_Kogen_Sports_Land.jpg',
     bgGradient: 'linear-gradient(135deg,#0a1e10,#0f2e18)',
     stats: {
       baseDepth: 85, summit48h: 16, base48h: 12,
@@ -894,7 +894,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Iwate',
     lat: 39.7400, lon: 140.9200,
     elevation: { base: 395, summit: 1044 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Mount_Iwate_and_Mount_Kurakake_from_Shizukuishi_Ski_Area.jpg/800px-Mount_Iwate_and_Mount_Kurakake_from_Shizukuishi_Ski_Area.jpg',
     bgGradient: 'linear-gradient(135deg,#142010,#1e3018)',
     stats: {
       baseDepth: 80, summit48h: 14, base48h: 10,
@@ -919,7 +919,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Akita',
     lat: 39.9500, lon: 140.8500,
     elevation: { base: 700, summit: 1614 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Akita_Hachimantai_Ski_Resort.jpg/800px-Akita_Hachimantai_Ski_Resort.jpg',
     bgGradient: 'linear-gradient(135deg,#0a0a20,#101030)',
     stats: {
       baseDepth: 120, summit48h: 28, base48h: 22,
@@ -994,7 +994,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Tochigi',
     lat: 37.0400, lon: 139.9400,
     elevation: { base: 800, summit: 1410 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Hunter-Mountain-Shibara-Gondolalift.JPG/800px-Hunter-Mountain-Shibara-Gondolalift.JPG',
     bgGradient: 'linear-gradient(135deg,#1e0a0a,#300f0f)',
     stats: {
       baseDepth: 60, summit48h: 10, base48h: 8,
@@ -1044,7 +1044,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Nagano',
     lat: 35.8800, lon: 137.4900,
     elevation: { base: 1570, summit: 2240 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Ciao_Ontake_Snow_Resort.JPG/800px-Ciao_Ontake_Snow_Resort.JPG',
     bgGradient: 'linear-gradient(135deg,#05101a,#0a1a28)',
     stats: {
       baseDepth: 95, summit48h: 18, base48h: 14,
@@ -1144,7 +1144,7 @@ const RESORTS = [
     region: 'hokkaido', prefecture: 'Hokkaido',
     lat: 42.7900, lon: 140.7200,
     elevation: { base: 200, summit: 1000 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/HANAZONO_1st_Lift_(6-seater).jpg/800px-HANAZONO_1st_Lift_(6-seater).jpg',
     bgGradient: 'linear-gradient(135deg,#0a1828,#102030)',
     stats: {
       baseDepth: 190, summit48h: 60, base48h: 52,
@@ -1194,7 +1194,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Niigata',
     lat: 36.8800, lon: 138.0700,
     elevation: { base: 800, summit: 1330 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Ikenotaira_kayaba_under.jpg/800px-Ikenotaira_kayaba_under.jpg',
     bgGradient: 'linear-gradient(135deg,#0e180a,#162510)',
     stats: {
       baseDepth: 180, summit48h: 48, base48h: 40,
@@ -1244,7 +1244,7 @@ const RESORTS = [
     region: 'honshu', prefecture: 'Aomori',
     lat: 40.6500, lon: 140.8700,
     elevation: { base: 398, summit: 1324 },
-    photo: '',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Hakkoda_Mountains.jpg/800px-Hakkoda_Mountains.jpg',
     bgGradient: 'linear-gradient(135deg,#050a14,#0a101e)',
     stats: {
       baseDepth: 160, summit48h: 42, base48h: 35,
