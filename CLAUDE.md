@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Japan Snowcast is a single-page weather and ski conditions dashboard for **20 Japanese ski resorts**. It is a **no-build, no-framework** application — plain HTML, CSS, and vanilla JavaScript that runs directly in the browser.
+Japan Snowcast is a single-page weather and ski conditions dashboard for **50 Japanese ski resorts**. It is a **no-build, no-framework** application — plain HTML, CSS, and vanilla JavaScript that runs directly in the browser.
 
 Live site: https://haobochuang.github.io/japan-snowcast/
 GitHub: https://github.com/haobochuang/japan-snowcast
@@ -18,7 +18,7 @@ Open `index.html` directly in any modern browser. No build step, package manager
 All application logic lives in three files:
 - `index.html` — markup and local script/style tags
 - `style.css` — ~800 lines; uses CSS custom properties for theming
-- `app.js` — ~1100 lines; entirely functional (no classes, no modules)
+- `app.js` — ~1900 lines; entirely functional (no classes, no modules)
 
 Local assets:
 - `leaflet.js` — Leaflet 1.9.4 bundled locally (CDN was unreliable)
@@ -27,7 +27,7 @@ Local assets:
 
 ### app.js structure (top to bottom)
 
-1. **Constants & data** — `OPEN_METEO` / `OPEN_METEO_ARCHIVE` endpoints, WMO weather code map, `RESORTS` array (20 resorts with static metadata, photos, and fallback forecast data hardcoded)
+1. **Constants & data** — `OPEN_METEO` / `OPEN_METEO_ARCHIVE` endpoints, WMO weather code map, `RESORTS` array (50 resorts with static metadata, photos, and fallback forecast data hardcoded)
 2. **Utility functions** — `wmoInfo()`, `deriveCondition()`, `formatDate()`, `nowJST()`, `todayStrJST()`, etc.
 3. **API layer** — `fetchResortWeather()` / `fetchAllWeather()` fetch Open-Meteo forecast in parallel; `fetchResortHistory()` fetches Open-Meteo archive for 3-month history; `processWeatherData()` / `processHistoryData()` mutate resort objects
 4. **Rendering** — `renderSummary()`, `buildCard()` (returns HTML string), `openModal()` / `closeModal()`, `applyFilter()`, `buildHistoryHTML()`, `renderHistoryIntoModal()`
@@ -48,7 +48,7 @@ init()
   → render immediately with fallback data (non-blocking)
   → fetchAllWeather()  (parallel Open-Meteo calls, 8s per resort / 10s global timeout)
   → processWeatherData() per resort  (mutates RESORTS)
-  → renderSummary() + buildCard() × 20 + renderMapMarkers()
+  → renderSummary() + buildCard() × 50 + renderMapMarkers()
   → scheduleRefresh() every 6 h
 
 openModal(resort)
@@ -77,19 +77,19 @@ Every resort object contains hardcoded `forecast` and `weeklySnow` arrays. If th
 - 48-hour snowfall is aggregated from hourly `snowfall` values in `processWeatherData()`
 - History is aggregated into ~13 weekly buckets in `processHistoryData()`
 
-## Resorts (20 total)
+## Resorts (50 total)
 
 | # | Resort | Region |
 |---|--------|--------|
 | 1 | Niseko United | Hokkaido |
-| 2 | Rusutsu | Hokkaido |
-| 3 | Furano | Hokkaido |
-| 4 | Hakuba Valley | Nagano |
-| 5 | Nozawa Onsen | Nagano |
-| 6 | Shiga Kogen | Nagano |
-| 7 | Myoko Suginohara | Niigata |
+| 2 | Hakuba Valley | Nagano |
+| 3 | Nozawa Onsen | Nagano |
+| 4 | Myoko Kogen | Niigata |
+| 5 | Furano | Hokkaido |
+| 6 | Rusutsu | Hokkaido |
+| 7 | Kiroro | Hokkaido |
 | 8 | Zao Onsen | Yamagata |
-| 9 | Kiroro | Hokkaido |
+| 9 | Shiga Kogen | Nagano |
 | 10 | Appi Kogen | Iwate |
 | 11 | Tomamu | Hokkaido |
 | 12 | Naeba | Niigata |
@@ -101,6 +101,36 @@ Every resort object contains hardcoded `forecast` and `weeklySnow` arrays. If th
 | 18 | Tazawako | Akita |
 | 19 | Grandeco | Fukushima |
 | 20 | Yuzawa Kogen | Niigata |
+| 21 | Kagura | Niigata |
+| 22 | GALA Yuzawa | Niigata |
+| 23 | Joetsu Kokusai | Niigata |
+| 24 | Moiwa | Hokkaido |
+| 25 | Tsugaike Kogen | Nagano |
+| 26 | Happo-one | Nagano |
+| 27 | Kamui Ski Links | Hokkaido |
+| 28 | Akakura Kanko | Niigata |
+| 29 | Mt. Rokko Snow Park | Hyogo |
+| 30 | Biwako Valley | Shiga |
+| 31 | Tenjindaira | Gunma |
+| 32 | Karuizawa Prince | Nagano |
+| 33 | Sugadaira Kogen | Nagano |
+| 34 | Shizukuishi | Iwate |
+| 35 | Hachimantai | Akita |
+| 36 | Inawashiro | Fukushima |
+| 37 | Tsunan | Niigata |
+| 38 | Hunter Mountain | Tochigi |
+| 39 | Nasu Kogen | Tochigi |
+| 40 | Ontake | Nagano |
+| 41 | Takasu Snow Park | Gifu |
+| 42 | Dynaland | Gifu |
+| 43 | Pippu | Hokkaido |
+| 44 | Hanazono | Hokkaido |
+| 45 | Seki Onsen | Niigata |
+| 46 | Ikenotaira Onsen | Niigata |
+| 47 | Aomori Spring | Aomori |
+| 48 | Hakkoda | Aomori |
+| 49 | Yubari Mount Racey | Hokkaido |
+| 50 | Tokachidake Onsen | Hokkaido |
 
 ## Git / Deployment
 
