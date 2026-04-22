@@ -1542,10 +1542,13 @@ function buildHistoryHTML(history) {
   }
   const { weeks } = history;
 
+  const LABEL_OVERHEAD = 34; // snow-bar-val (~12px) + 2 gaps (4px each) + snow-bar-label (~14px)
+
   // — Snowfall bars —
-  const maxSnow  = Math.max(...weeks.map(w => w.snowTotal), 1);
-  const snowBars = weeks.map(w => {
-    const h = Math.max(4, Math.round((w.snowTotal / maxSnow) * 52));
+  const maxSnow    = Math.max(...weeks.map(w => w.snowTotal), 1);
+  const SNOW_BAR_H = 52;
+  const snowBars   = weeks.map(w => {
+    const h = Math.max(4, Math.round((w.snowTotal / maxSnow) * SNOW_BAR_H));
     return `
       <div class="snow-bar-wrap">
         <div class="snow-bar-val">${w.snowTotal > 0 ? w.snowTotal : ''}</div>
@@ -1576,9 +1579,10 @@ function buildHistoryHTML(history) {
   }).join('');
 
   // — Wind bars —
-  const maxWind  = Math.max(...weeks.map(w => w.windAvg), 1);
-  const windBars = weeks.map(w => {
-    const h = Math.max(4, Math.round((w.windAvg / maxWind) * 52));
+  const maxWind    = Math.max(...weeks.map(w => w.windAvg), 1);
+  const WIND_BAR_H = 52;
+  const windBars   = weeks.map(w => {
+    const h = Math.max(4, Math.round((w.windAvg / maxWind) * WIND_BAR_H));
     return `
       <div class="snow-bar-wrap">
         <div class="snow-bar-val">${w.windAvg}</div>
@@ -1590,7 +1594,7 @@ function buildHistoryHTML(history) {
   return `
     <div class="modal-section">
       <div class="modal-section-title">Snowfall — Weekly Total (cm)</div>
-      <div class="snow-chart hist-chart">${snowBars}</div>
+      <div class="snow-chart hist-chart" style="height:${SNOW_BAR_H + LABEL_OVERHEAD}px">${snowBars}</div>
     </div>
     <div class="modal-section">
       <div class="modal-section-title">Temperature — Weekly Hi / Lo (°C)</div>
@@ -1598,7 +1602,7 @@ function buildHistoryHTML(history) {
     </div>
     <div class="modal-section">
       <div class="modal-section-title">Wind Speed — Weekly Avg (km/h)</div>
-      <div class="snow-chart hist-chart">${windBars}</div>
+      <div class="snow-chart hist-chart" style="height:${WIND_BAR_H + LABEL_OVERHEAD}px">${windBars}</div>
     </div>`;
 }
 
@@ -1609,6 +1613,127 @@ async function renderHistoryIntoModal(resort) {
   const history = await fetchResortHistory(resort);
   const el = document.getElementById('hist-placeholder');
   if (el) el.innerHTML = buildHistoryHTML(history);
+}
+
+// ─── 10-Year Snowfall ─────────────────────────────────────────────────────────
+function get10YearDateRange() {
+  const jst = nowJST();
+  const end = new Date(jst);
+  end.setDate(end.getDate() - 1);             // yesterday JST (archive requires past dates)
+  const start = new Date(end);
+  start.setFullYear(start.getFullYear() - 10);
+  start.setDate(1);                           // set day first to prevent month-overflow
+  start.setMonth(10);                         // November (month index 10)
+  return {
+    startDate: start.toISOString().slice(0, 10),
+    endDate:   end.toISOString().slice(0, 10),
+  };
+}
+
+function process10YearData(daily) {
+  if (!daily || !daily.time || !daily.time.length) return null;
+  const seasons = {};
+
+  for (let i = 0; i < daily.time.length; i++) {
+    const d     = new Date(daily.time[i] + 'T12:00:00+09:00');
+    const month = d.getMonth() + 1;  // 1–12
+    const year  = d.getFullYear();
+    // Skip May–Oct (off-season months)
+    if (month > 4 && month < 11) continue;
+    // Nov/Dec belong to the season starting that year; Jan–Apr belong to the prior year's season
+    const seasonYear = month >= 11 ? year : year - 1;
+    const key = `${seasonYear}/${String(seasonYear + 1).slice(-2)}`;
+    seasons[key] = (seasons[key] || 0) + (daily.snowfall_sum[i] || 0);
+  }
+
+  const sorted = Object.entries(seasons)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([season, total]) => ({ season, total: Math.round(total) }));
+
+  if (!sorted.length) return null;
+  const grandTotal = sorted.reduce((s, r) => s + r.total, 0);
+  return { seasons: sorted, grandTotal };
+}
+
+async function fetch10YearSnowfall(resort) {
+  if (resort.decadeCache !== undefined) return resort.decadeCache;
+
+  const { startDate, endDate } = get10YearDateRange();
+  const params = new URLSearchParams({
+    latitude:   resort.lat,
+    longitude:  resort.lon,
+    start_date: startDate,
+    end_date:   endDate,
+    daily:      'snowfall_sum',
+    timezone:   'Asia/Tokyo',
+  });
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20000);
+  try {
+    const res = await fetch(
+      `https://archive-api.open-meteo.com/v1/archive?${params}`,
+      { signal: controller.signal }
+    );
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    resort.decadeCache = process10YearData(data.daily);
+  } catch (err) {
+    clearTimeout(timer);
+    console.warn(`[${resort.name}] 10-year fetch failed:`, err);
+    resort.decadeCache = null;
+  }
+  return resort.decadeCache;
+}
+
+function build10YearChartHTML(data) {
+  if (!data || !data.seasons || !data.seasons.length) {
+    return `<p style="font-size:0.85rem;color:var(--text-dim);padding:0.25rem 0">No snowfall data returned for this resort. The archive API may not cover this location.</p>`;
+  }
+  const { seasons, grandTotal } = data;
+  const maxSnow      = Math.max(...seasons.map(s => s.total), 1);
+  const avgPerSeason = Math.round(grandTotal / seasons.length);
+
+  const MAX_BAR_H = 72;
+  const LABEL_OVERHEAD = 34; // snow-bar-val (~12px) + 2 gaps (4px each) + snow-bar-label (~14px)
+  const chartHeight = MAX_BAR_H + LABEL_OVERHEAD;
+
+  const bars = seasons.map(s => {
+    const h = Math.max(4, Math.round((s.total / maxSnow) * MAX_BAR_H));
+    return `
+      <div class="snow-bar-wrap">
+        <div class="snow-bar-val">${s.total > 0 ? s.total : ''}</div>
+        <div class="snow-bar" style="height:${h}px"></div>
+        <div class="snow-bar-label">${s.season}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div style="display:flex;gap:16px;margin-bottom:12px;font-size:0.82rem;color:var(--text-dim)">
+      <span>Total: <strong style="color:var(--accent)">${grandTotal} cm</strong></span>
+      <span>Avg/season: <strong style="color:var(--powder)">${avgPerSeason} cm</strong></span>
+      <span>${seasons.length} seasons</span>
+    </div>
+    <div class="snow-chart hist-chart" style="height:${chartHeight}px">${bars}</div>`;
+}
+
+async function render10YearIntoModal(resort) {
+  const placeholder = document.getElementById('decade-placeholder');
+  if (!placeholder) return;
+
+  // Render section shell immediately so title is always visible
+  placeholder.innerHTML = `
+    <div class="modal-section">
+      <div class="modal-section-title">10-Year Snowfall by Season (cm, Nov–Apr)</div>
+      <div id="decade-chart">
+        <div class="hist-loading"><span style="animation:spin 2s linear infinite;display:inline-block">⏳</span> Loading 10-year snowfall…</div>
+      </div>
+    </div>`;
+
+  const data = await fetch10YearSnowfall(resort);
+  const el = document.getElementById('decade-chart');
+  if (el) el.innerHTML = build10YearChartHTML(data);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -1806,6 +1931,7 @@ function openModal(resort) {
         <p style="font-size:0.85rem;color:var(--text-dim);line-height:1.6">${resort.notes}</p>
       </div>
       <div id="hist-placeholder"></div>
+      <div id="decade-placeholder"></div>
     </div>`;
 
   document.getElementById('modalOverlay').classList.add('open');
@@ -1825,6 +1951,8 @@ function openModal(resort) {
 
   // Load 3-month history asynchronously (non-blocking)
   renderHistoryIntoModal(resort);
+  // Load 10-year seasonal snowfall asynchronously (non-blocking)
+  render10YearIntoModal(resort);
 }
 
 function closeModal() {
