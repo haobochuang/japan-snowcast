@@ -958,3 +958,125 @@ body {
 ::-webkit-scrollbar-track { background: var(--surface); }
 ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(79,195,247,0.3); }
+
+/* ─── Theme Toggle Button ────────────────────────────────── */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background 0.2s, border-color 0.2s;
+}
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.14);
+  border-color: var(--accent);
+}
+
+/* ─── Sakura (Light) Theme ───────────────────────────────── */
+body.sakura-theme {
+  --bg: #fdf0f5;
+  --surface: #fff5f8;
+  --surface2: #fce8f0;
+  --border: rgba(194,24,91,0.1);
+  --accent: #c2185b;
+  --accent2: #e91e63;
+  --powder: #7c3aed;
+  --green: #16a34a;
+  --red: #dc2626;
+  --amber: #b45309;
+  --text: #1a0812;
+  --text-dim: rgba(26,8,18,0.58);
+  --text-faint: rgba(26,8,18,0.32);
+  --shadow: 0 4px 24px rgba(194,24,91,0.12);
+}
+
+/* Header */
+body.sakura-theme .header {
+  background: linear-gradient(135deg, #f8bbd9 0%, #f3e5f5 100%);
+  border-bottom-color: rgba(194,24,91,0.15);
+}
+
+/* Badges & active buttons that hardcode dark text */
+body.sakura-theme .season-badge,
+body.sakura-theme .filter-btn.active,
+body.sakura-theme .map-layer-btn.active,
+body.sakura-theme .bigmap-open-btn {
+  color: #000;
+  background: rgba(253, 83, 131, 0.92);
+}
+
+/* Map layer buttons — light bg, black text in sakura */
+body.sakura-theme .map-layer-btn {
+  background: rgba(255,248,250,0.92);
+  border-color: rgba(194,24,91,0.2);
+  color: #1a0812;
+}
+body.sakura-theme .map-layer-btn:hover {
+  background: #fff8fa;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Map legend — same light profile as layer buttons */
+body.sakura-theme .map-legend {
+  background: rgba(255,248,250,0.92);
+  border-color: rgba(194,24,91,0.2);
+}
+body.sakura-theme .map-legend-item {
+  color: #1a0812;
+}
+
+/* Snowflake / petal particles */
+body.sakura-theme .snowflake {
+  color: rgba(236,64,122,0.55);
+}
+
+/* Theme toggle button itself */
+body.sakura-theme .theme-toggle {
+  background: rgba(194,24,91,0.08);
+  border-color: rgba(194,24,91,0.25);
+}
+body.sakura-theme .theme-toggle:hover {
+  background: rgba(194,24,91,0.14);
+}
+
+/* Map marker popup (hardcoded dark bg) */
+body.sakura-theme .map-popup {
+  background: rgba(253,240,245,0.97) !important;
+  color: var(--text);
+}
+
+/* Card rank badge — white bg in sakura */
+body.sakura-theme .card-rank {
+  background: rgba(255,255,255,0.88);
+  border-color: rgba(194,24,91,0.15);
+}
+
+/* Map pin bubble — opaque white with pink tint */
+body.sakura-theme .map-pin-bubble {
+  background: #fff8fa;
+  box-shadow: 0 2px 12px rgba(194,24,91,0.2);
+}
+
+/* No photo yet — replace dark bgGradient with light pink */
+body.sakura-theme .card-hero-bg:not(.photo-loaded) {
+  background: linear-gradient(135deg, #fce4ec, #f3e5f5) !important;
+}
+/* Photo loaded — show it at full natural brightness */
+body.sakura-theme .card-hero-bg.photo-loaded {
+  filter: brightness(1.1);
+}
+/* Lighten the dark bottom overlay so it suits a light theme */
+body.sakura-theme .card-hero-overlay {
+  background: linear-gradient(to top, rgba(180,80,120,0.45) 0%, transparent 60%);
+}
+
+/* Modal backdrop — keep dark for dimming effect */

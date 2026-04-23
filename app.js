@@ -2168,10 +2168,14 @@ function closeBigMap() {
   document.body.style.overflow = '';
 }
 
-// ─── Snow Background ──────────────────────────────────────────────────────────
-function createSnowflakes() {
+// ─── Theme ────────────────────────────────────────────────────────────────────
+const SNOW_CHARS   = ['❄', '❅', '❆', '·', '•'];
+const SAKURA_CHARS = ['✿', '❀', '✦', '·', '*'];
+
+function createSnowflakes(sakura = false) {
   const container = document.getElementById('snowBg');
-  const chars = ['❄', '❅', '❆', '·', '•'];
+  container.innerHTML = '';
+  const chars = sakura ? SAKURA_CHARS : SNOW_CHARS;
   for (let i = 0; i < 40; i++) {
     const el = document.createElement('div');
     el.className = 'snowflake';
@@ -2183,6 +2187,23 @@ function createSnowflakes() {
     el.style.opacity           = Math.random() * 0.5 + 0.1;
     container.appendChild(el);
   }
+}
+
+function applyTheme(theme) {
+  const isSakura = theme === 'sakura';
+  document.body.classList.toggle('sakura-theme', isSakura);
+  localStorage.setItem('theme', theme);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = isSakura ? '🌙 Dark' : '🌸 Sakura';
+  createSnowflakes(isSakura);
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('theme');
+  applyTheme(saved === 'sakura' ? 'sakura' : 'dark');
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    applyTheme(document.body.classList.contains('sakura-theme') ? 'dark' : 'sakura');
+  });
 }
 
 // ─── Auto-Refresh ─────────────────────────────────────────────────────────────
@@ -2200,7 +2221,7 @@ function scheduleRefresh() {
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
-  createSnowflakes();
+  initTheme();
   try { initMap(); } catch (e) {
     console.warn('Map init failed:', e);
     document.querySelector('.map-section').style.display = 'none';
